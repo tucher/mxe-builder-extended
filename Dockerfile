@@ -15,15 +15,16 @@ RUN cd /mxe && make  \
                 download-luabind \
                 download-cgal \
                 --jobs=8 JOBS=1
+RUN echo "building thread count " `grep -c ^processor /proc/cpuinfo`
 
 RUN cd /mxe && make MXE_TARGETS='x86_64-w64-mingw32.static.posix' \
                 boost \
-                --jobs=1 JOBS=8 \
+                --jobs=1 JOBS=`grep -c ^processor /proc/cpuinfo` \
                 && make clean-pkg && make clean-junk
 
 RUN cd /mxe && make MXE_TARGETS='x86_64-w64-mingw32.static.posix' \
                 qt5 \
-                --jobs=1 JOBS=8 \
+                --jobs=1 JOBS=`grep -c ^processor /proc/cpuinfo` \
                 && make clean-pkg && make clean-junk
 
 RUN cd /mxe && make MXE_TARGETS='x86_64-w64-mingw32.static.posix' \
@@ -38,12 +39,12 @@ RUN cd /mxe && make MXE_TARGETS='x86_64-w64-mingw32.static.posix' \
                 lua \
                 luabind \
                 cgal \
-                --jobs=1 JOBS=8 \
+                --jobs=1 JOBS=`grep -c ^processor /proc/cpuinfo` \
                 && make clean-pkg && make clean-junk
     
 RUN cd /mxe && make MXE_TARGETS='x86_64-w64-mingw32.shared.posix' \
                 qt5 \
-                --jobs=8 JOBS=1 \
+                --jobs=`grep -c ^processor /proc/cpuinfo` JOBS=1 \
                 && make clean-pkg && make clean-junk
 RUN cd /mxe && make MXE_TARGETS='x86_64-w64-mingw32.shared.posix' \
                 cryptopp \
@@ -57,6 +58,6 @@ RUN cd /mxe && make MXE_TARGETS='x86_64-w64-mingw32.shared.posix' \
                 lua \
                 luabind \
                 cgal \
-                --jobs=1 JOBS=8 \
+                --jobs=1 JOBS=`grep -c ^processor /proc/cpuinfo` \
                 && make clean-pkg && make clean-junk
 
