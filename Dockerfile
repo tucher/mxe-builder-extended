@@ -1,30 +1,17 @@
-FROM tucher/mxe-builder:06_03_2019
+FROM tucher/mxe-builder
 
-RUN cd /mxe && make  \
-                download-qt5 \
-                download-boost \
-                download-cryptopp \
-                download-cpp-netlib \
-                download-curl \
-                download-eigen \
-                download-libftdi1 \
-                download-libmicrohttpd \
-                download-libserialport \
-                download-libusb1 \
-                download-lua \
-                download-luabind \
-                download-cgal \
-                --jobs=8 JOBS=1
-RUN echo "building thread count " `grep -c ^processor /proc/cpuinfo`
+ENV BUILD_GROUPS=4
+ENV BUILD_THREADS=10
+
 
 RUN cd /mxe && make MXE_TARGETS='x86_64-w64-mingw32.static.posix' \
                 boost \
-                --jobs=1 JOBS=`grep -c ^processor /proc/cpuinfo` \
+                --jobs=$BUILD_GROUPS JOBS=$BUILD_THREADS \
                 && make clean-pkg && make clean-junk
 
 RUN cd /mxe && make MXE_TARGETS='x86_64-w64-mingw32.static.posix' \
                 qt5 \
-                --jobs=1 JOBS=`grep -c ^processor /proc/cpuinfo` \
+                --jobs=$BUILD_GROUPS JOBS=$BUILD_THREADS \
                 && make clean-pkg && make clean-junk
 
 RUN cd /mxe && make MXE_TARGETS='x86_64-w64-mingw32.static.posix' \
@@ -39,12 +26,12 @@ RUN cd /mxe && make MXE_TARGETS='x86_64-w64-mingw32.static.posix' \
                 lua \
                 luabind \
                 cgal \
-                --jobs=1 JOBS=`grep -c ^processor /proc/cpuinfo` \
+                --jobs=$BUILD_GROUPS JOBS=$BUILD_THREADS \
                 && make clean-pkg && make clean-junk
     
 RUN cd /mxe && make MXE_TARGETS='x86_64-w64-mingw32.shared.posix' \
                 qt5 \
-                --jobs=`grep -c ^processor /proc/cpuinfo` JOBS=1 \
+                --jobs=$BUILD_THREADS JOBS=1 \
                 && make clean-pkg && make clean-junk
 RUN cd /mxe && make MXE_TARGETS='x86_64-w64-mingw32.shared.posix' \
                 cryptopp \
@@ -58,6 +45,6 @@ RUN cd /mxe && make MXE_TARGETS='x86_64-w64-mingw32.shared.posix' \
                 lua \
                 luabind \
                 cgal \
-                --jobs=1 JOBS=`grep -c ^processor /proc/cpuinfo` \
+                --jobs=$BUILD_GROUPS JOBS=$BUILD_THREADS \
                 && make clean-pkg && make clean-junk
 
