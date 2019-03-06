@@ -1,4 +1,4 @@
-FROM tucher/mxe-builder
+FROM tucher/mxe-builder:06_03_2019
 
 RUN cd /mxe && make  \
                 download-qt5 \
