@@ -30,3 +30,5 @@ RUN cd /mxe && make MXE_TARGETS='x86_64-w64-mingw32.static.posix  x86_64-w64-min
                 && make clean-pkg && make clean-junk
 
 RUN apt-get install -y nsis
+
+RUN touch /mxe/src/qtwebsockets.mk && cd /mxe && make MXE_TARGETS='x86_64-w64-mingw32.static.posix' qtwebsockets
