@@ -1,3 +1,1 @@
-docker build  -t mxe-builder-extended .
-docker tag mxe-builder-extended tucher/mxe-builder-extended
-docker push tucher/mxe-builder-extended
+docker buildx build --platform linux/amd64,linux/arm64 --push -t tucher/mxe-builder-extended:gcc13-qt5-qt6 .
